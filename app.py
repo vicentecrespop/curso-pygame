@@ -17,6 +17,10 @@ altura = 480
 x_cobra = largura / 2
 y_cobra = altura / 2
 
+velocidade = 10
+x_controle = velocidade
+y_controle = 0
+
 x_maca = randint(40, 600)
 y_maca = randint(50, 430)
 
@@ -27,6 +31,7 @@ tela = pygame.display.set_mode((largura, altura))
 pygame.display.set_caption('Primeiro Jogo')
 relogio = pygame.time.Clock()
 lista_cobra = []
+comprimento_inicial = 5
 
 
 def aumenta_cobra(lista_cobra):
@@ -42,24 +47,34 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             exit()
-        # if event.type == KEYDOWN:
-        #     if event.key == K_a:
-        #         x = x - 20
-        #     if event.key == K_d:
-        #         x = x + 20
-        #     if event.key == K_w:
-        #         y = y - 20
-        #     if event.key == K_s:
-        #         y = y + 20
+        if event.type == KEYDOWN:
+            if event.key == K_a:
+                if x_controle == velocidade:
+                    pass
+                else:
+                    x_controle = - velocidade
+                    y_controle = 0
+            if event.key == K_d:
+                if x_controle == - velocidade:
+                    pass
+                else:
+                    x_controle = velocidade
+                    y_controle = 0
+            if event.key == K_w:
+                if y_controle == velocidade:
+                    pass
+                else:
+                    y_controle = - velocidade
+                    x_controle = 0
+            if event.key == K_s:
+                if y_controle == - velocidade:
+                    pass
+                else:
+                    y_controle = velocidade
+                    x_controle = 0
         
-    if pygame.key.get_pressed()[K_a]:
-        x_cobra = x_cobra - 20
-    if pygame.key.get_pressed()[K_d]:
-        x_cobra = x_cobra + 20
-    if pygame.key.get_pressed()[K_w]:
-        y_cobra = y_cobra - 20
-    if pygame.key.get_pressed()[K_s]:
-        y_cobra = y_cobra + 20
+    x_cobra = x_cobra + x_controle
+    y_cobra = y_cobra + y_controle
 
     cobra = pygame.draw.rect(tela, (0, 255, 0), (x_cobra, y_cobra, 20, 20))
     maca = pygame.draw.rect(tela, (255, 0, 0), (x_maca, y_maca, 20, 20))
@@ -69,12 +84,16 @@ while True:
         y_maca = randint(50, 430)
         pontos = pontos + 1
         barulho_colisao.play()
+        comprimento_inicial = comprimento_inicial + 1
 
     lista_cabeca = []
     lista_cabeca.append(x_cobra)
     lista_cabeca.append(y_cobra)
 
     lista_cobra.append(lista_cabeca)
+
+    if len(lista_cobra) > comprimento_inicial:
+        del lista_cobra[0]
 
     aumenta_cobra(lista_cobra)
 
